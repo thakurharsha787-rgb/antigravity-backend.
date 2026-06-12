@@ -29,7 +29,9 @@ function initFirebase() {
   }
 
   try {
-    const serviceAccount = JSON.parse(raw);
+    // Robustly handle stringified JSON that may contain escaped double quotes (e.g. \")
+    const cleanRaw = raw.replace(/\\"/g, '"');
+    const serviceAccount = JSON.parse(cleanRaw);
     return admin.initializeApp({
       credential: admin.credential.cert(serviceAccount),
     });
